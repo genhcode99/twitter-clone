@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
+import { dbService } from '../firebaseApp'
 
 const Home = () => {
   // 1. 버튼 클릭
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault()
+    await dbService.collection('tweets').add({
+      tweet,
+      createdAt: Date.now(),
+    })
+    setTweet('')
   }
 
   // 2. Input Text 변경
