@@ -1,7 +1,14 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { authService } from '../firebaseApp'
 
 const Profile = () => {
-  return <div>Profile</div>
+  const history = useHistory()
+  const onLogOutClick = () => {
+    authService.signOut()
+    history.push('/')
+  }
+  return <button onClick={onLogOutClick}>Log Out</button>
 }
 
 export default Profile
