@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dbService } from '../firebaseApp'
 
 const Home = () => {
-  // 1. 버튼 클릭
+  // State (상태관리)
+  const [tweet, setTweet] = useState('')
+  const [tweets, setTweets] = useState([])
+
+  // #. Tweet Submit
   const onSubmit = async (event) => {
     event.preventDefault()
     await dbService.collection('tweets').add({
@@ -12,9 +16,7 @@ const Home = () => {
     setTweet('')
   }
 
-  // 2. Input Text 변경
-  const [tweet, setTweet] = useState('')
-
+  // #. Input Text 실시간 변경
   const onChange = (event) => {
     const {
       target: { value },
@@ -22,6 +24,23 @@ const Home = () => {
     setTweet(value)
   }
 
+  // #. Tweet 가져오기
+  const getTweets = async () => {
+    const DBTweets = await dbService.collection('tweets').get()
+    DBTweets.forEach((document) => {
+      const tweetObject = {
+        ...document.data(),
+        id: document.id,
+      }
+      setTweets((prev) => [tweetObject, ...prev])
+    })
+  }
+
+  useEffect(() => {
+    getTweets()
+  }, [])
+
+  console.log(tweets)
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -34,6 +53,13 @@ const Home = () => {
         />
         <input type='submit' value='Tweet' />
       </form>
+      <div>
+        {tweets.map((tweet) => (
+          <div key={tweet.id}>
+            <h4>{tweet.tweet}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
