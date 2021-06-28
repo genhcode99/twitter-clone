@@ -26,6 +26,20 @@ const Home = ({ userObj }) => {
     setTweet(value)
   }
 
+  // #. 선택된 사진 미리보기
+  const onFileChange = (event) => {
+    const {
+      target: { files },
+    } = event
+    const theFile = files[0]
+    const reader = new FileReader()
+    reader.onloadend = (finishedEvent) => {
+      console.log(finishedEvent)
+    }
+    reader.readAsDataURL(theFile)
+  }
+
+  // Use Effect
   useEffect(() => {
     // #. Tweets DB에서 '실시간' 가져오기
     dbService
@@ -51,6 +65,7 @@ const Home = ({ userObj }) => {
           placeholder="What's on your mind"
           maxLength={120}
         />
+        <input type='file' accept='image/*' onChange={onFileChange} />
         <input type='submit' value='Tweet' />
       </form>
       <div>
