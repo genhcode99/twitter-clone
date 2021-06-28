@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { authService, dbService } from '../firebaseApp'
 
-const Profile = ({ userObj }) => {
+const Profile = ({ userObj, refreshUser }) => {
   // State (상태관리)
   const [newDisplayName, setNewDisplayName] = useState(userObj.displayName)
 
@@ -30,6 +30,7 @@ const Profile = ({ userObj }) => {
       await userObj.updateProfile({
         displayName: newDisplayName,
       })
+      refreshUser()
     }
   }
 

@@ -11,16 +11,34 @@ function App() {
     // #. 로그인 상태 확인
     authService.onAuthStateChanged((user) => {
       if (user) {
-        setUserObj(user)
+        setUserObj({
+          displayName: user.displayName,
+          uid: user.uid,
+          updateProfile: (args) => user.updateProfile(args),
+        })
       }
       setInit(true)
     })
   }, [])
 
+  // User 상태 실시간 새로고침
+  const refreshUser = () => {
+    const user = authService.currentUser
+    setUserObj({
+      displayName: user.displayName,
+      uid: user.uid,
+      updateProfile: (args) => user.updateProfile(args),
+    })
+  }
+
   return (
     <>
       {init ? (
-        <Router isLoggedIn={Boolean(userObj)} userObj={userObj} />
+        <Router
+          isLoggedIn={Boolean(userObj)}
+          userObj={userObj}
+          refreshUser={refreshUser}
+        />
       ) : (
         'Initializing....'
       )}

@@ -5,7 +5,7 @@ import Home from '../routes/Home'
 import Profile from '../routes/Profile'
 import Navigation from './Navigation'
 
-const Router = ({ isLoggedIn, userObj }) => {
+const Router = ({ isLoggedIn, userObj, refreshUser }) => {
   return (
     <HashRouter>
       {isLoggedIn ? <Navigation userObj={userObj} /> : null}
@@ -16,7 +16,7 @@ const Router = ({ isLoggedIn, userObj }) => {
               <Home userObj={userObj} />
             </Route>
             <Route exact path='/profile'>
-              <Profile userObj={userObj} />
+              <Profile userObj={userObj} refreshUser={refreshUser} />
             </Route>
           </>
         ) : (
