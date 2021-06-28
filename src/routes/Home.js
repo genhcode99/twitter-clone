@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { traverseTwoPhase } from 'react-dom/test-utils'
 import Tweet from '../components/Tweet'
 import { dbService } from '../firebaseApp'
 
