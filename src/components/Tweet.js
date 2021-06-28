@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { dbService } from '../firebaseApp'
+import { dbService, storageService } from '../firebaseApp'
 
 const Tweet = ({ tweetObj, isOwner }) => {
   // State (상태관리)
@@ -11,6 +11,8 @@ const Tweet = ({ tweetObj, isOwner }) => {
     const ok = window.confirm('정말로 삭제하시겠습니까?')
     if (ok) {
       await dbService.doc(`tweets/${tweetObj.id}`).delete()
+      if (tweetObj.attachmentUrl !== '')
+        await storageService.refFromURL(tweetObj.attachmentUrl).delete()
     }
   }
 

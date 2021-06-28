@@ -7,7 +7,7 @@ const Home = ({ userObj }) => {
   // State (상태관리)
   const [tweet, setTweet] = useState('')
   const [tweets, setTweets] = useState([])
-  const [attachment, setAttachment] = useState()
+  const [attachment, setAttachment] = useState('')
 
   // #. Tweet Submit
   const onSubmit = async (event) => {
