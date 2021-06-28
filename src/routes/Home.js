@@ -12,15 +12,23 @@ const Home = ({ userObj }) => {
   // #. Tweet Submit
   const onSubmit = async (event) => {
     event.preventDefault()
-    const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`)
-    const reponse = await fileRef.putString(attachment, 'data_url')
-    console.log(reponse)
-    // await dbService.collection('tweets').add({
-    //   text: tweet,
-    //   createdAt: Date.now(),
-    //   creatorId: userObj.uid,
-    // })
-    // setTweet('')
+    let attachmentUrl = ''
+    if (attachment !== '') {
+      const attachmentRef = storageService
+        .ref()
+        .child(`${userObj.uid}/${uuidv4()}`)
+      const reponse = await attachmentRef.putString(attachment, 'data_url')
+      attachmentUrl = await reponse.ref.getDownloadURL()
+    }
+    const tweetInfo = {
+      text: tweet,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentUrl,
+    }
+    await dbService.collection('tweets').add(tweetInfo)
+    setTweet('')
+    setAttachment('')
   }
 
   // #. Input Text 실시간 변경
