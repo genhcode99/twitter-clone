@@ -6,6 +6,7 @@ const Home = ({ userObj }) => {
   // State (상태관리)
   const [tweet, setTweet] = useState('')
   const [tweets, setTweets] = useState([])
+  const [attachment, setAttachment] = useState()
 
   // #. Tweet Submit
   const onSubmit = async (event) => {
@@ -34,9 +35,17 @@ const Home = ({ userObj }) => {
     const theFile = files[0]
     const reader = new FileReader()
     reader.onloadend = (finishedEvent) => {
-      console.log(finishedEvent)
+      const {
+        currentTarget: { result },
+      } = finishedEvent
+      setAttachment(result)
     }
     reader.readAsDataURL(theFile)
+  }
+
+  // #. 선택된 사진 지우기
+  const onClickClear = () => {
+    setAttachment(null)
   }
 
   // Use Effect
@@ -55,6 +64,7 @@ const Home = ({ userObj }) => {
       })
   }, [])
 
+  // Return
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -67,6 +77,12 @@ const Home = ({ userObj }) => {
         />
         <input type='file' accept='image/*' onChange={onFileChange} />
         <input type='submit' value='Tweet' />
+        {attachment ? (
+          <div>
+            <img src={attachment} width='50px' height='50px' alt='attached' />
+            <button onClick={onClickClear}>Clear</button>
+          </div>
+        ) : null}
       </form>
       <div>
         {tweets.map((tweet) => (
