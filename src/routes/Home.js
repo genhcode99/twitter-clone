@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Tweet from '../components/Tweet'
-import { dbService } from '../firebaseApp'
+import { v4 as uuidv4 } from 'uuid'
+import { dbService, storageService } from '../firebaseApp'
 
 const Home = ({ userObj }) => {
   // State (상태관리)
@@ -11,12 +12,15 @@ const Home = ({ userObj }) => {
   // #. Tweet Submit
   const onSubmit = async (event) => {
     event.preventDefault()
-    await dbService.collection('tweets').add({
-      text: tweet,
-      createdAt: Date.now(),
-      creatorId: userObj.uid,
-    })
-    setTweet('')
+    const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`)
+    const reponse = await fileRef.putString(attachment, 'data_url')
+    console.log(reponse)
+    // await dbService.collection('tweets').add({
+    //   text: tweet,
+    //   createdAt: Date.now(),
+    //   creatorId: userObj.uid,
+    // })
+    // setTweet('')
   }
 
   // #. Input Text 실시간 변경
