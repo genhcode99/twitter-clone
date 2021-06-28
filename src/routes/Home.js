@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { dbService } from '../firebaseApp'
 
-const Home = () => {
+const Home = ({ userObj }) => {
   // State (상태관리)
   const [tweet, setTweet] = useState('')
   const [tweets, setTweets] = useState([])
@@ -10,8 +10,9 @@ const Home = () => {
   const onSubmit = async (event) => {
     event.preventDefault()
     await dbService.collection('tweets').add({
-      tweet,
+      text: tweet,
       createdAt: Date.now(),
+      creatorId: userObj.uid,
     })
     setTweet('')
   }
@@ -24,23 +25,21 @@ const Home = () => {
     setTweet(value)
   }
 
-  // #. Tweet 가져오기
-  const getTweets = async () => {
-    const DBTweets = await dbService.collection('tweets').get()
-    DBTweets.forEach((document) => {
-      const tweetObject = {
-        ...document.data(),
-        id: document.id,
-      }
-      setTweets((prev) => [tweetObject, ...prev])
-    })
-  }
-
   useEffect(() => {
-    getTweets()
+    // #. Tweets DB에서 '실시간' 가져오기
+    dbService
+      .collection('tweets')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((snapshot) => {
+        const tweetArray = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+
+        setTweets(tweetArray)
+      })
   }, [])
 
-  console.log(tweets)
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -56,7 +55,7 @@ const Home = () => {
       <div>
         {tweets.map((tweet) => (
           <div key={tweet.id}>
-            <h4>{tweet.tweet}</h4>
+            <h4>{tweet.text}</h4>
           </div>
         ))}
       </div>
