@@ -74,7 +74,7 @@ const TweetFactory = ({ userObj }) => {
           placeholder="What's on your mind"
           maxLength={120}
         />
-        <input type='submit' value='&rarr;' className='factoryInput__arror' />
+        <input type='submit' value='&rarr;' className='factoryInput__arrow' />
       </div>
       <label for='attach-file' className='factoryInput__label'>
         <span>Add Photos</span>

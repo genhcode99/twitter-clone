@@ -115,8 +115,6 @@ form {
 }
 
 .factoryInput__arrow {
-  position: absolute;
-  right: 0;
   background-color: #04aaff;
   height: 40px;
   width: 40px;
