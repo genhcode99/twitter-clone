@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { authService, dbService } from '../firebaseApp'
+import { authService } from '../firebaseApp'
 
 const Profile = ({ userObj, refreshUser }) => {
   // State (상태관리)
@@ -11,16 +11,6 @@ const Profile = ({ userObj, refreshUser }) => {
   const onLogOutClick = () => {
     authService.signOut()
     history.push('/')
-  }
-
-  // #. 사용자가 쓴 Tweet 가져오기
-  const getMyTweets = async () => {
-    const tweets = await dbService
-      .collection('tweets')
-      .where('creatorId', '==', userObj.uid)
-      .orderBy('createdAt', 'desc')
-      .get()
-    console.log(tweets.docs.map((doc) => doc.data()))
   }
 
   // #. displayName 변경
@@ -42,25 +32,31 @@ const Profile = ({ userObj, refreshUser }) => {
     setNewDisplayName(value)
   }
 
-  // Use Effect
-  useEffect(() => {
-    getMyTweets()
-  }, [])
-
   // Return
   return (
-    <>
-      <form onSubmit={onSubmit}>
+    <div className='container'>
+      <form onSubmit={onSubmit} className='profileForm'>
         <input
-          type='text'
-          placeholder='Display Name'
           onChange={onChange}
+          type='text'
+          autoFocus
+          placeholder='Display Name'
           value={newDisplayName}
+          className='formInput'
         />
-        <input type='submit' placeholder='Update Profile' />
+        <input
+          type='submit'
+          value='Update Profile'
+          className='formBtn'
+          style={{
+            marginTop: 10,
+          }}
+        />
       </form>
-      <button onClick={onLogOutClick}>Log Out</button>
-    </>
+      <span className='formBtn cancelBtn logOut' onClick={onLogOutClick}>
+        Log Out
+      </span>
+    </div>
   )
 }
 
